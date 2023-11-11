@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Text,
@@ -10,8 +10,12 @@ import {
   Center,
   FlatList,
 } from "@gluestack-ui/themed";
-
-import { ScrollView, Dimensions, StatusBar } from "react-native";
+import {
+  ScrollView,
+  Dimensions,
+  StatusBar,
+  ListRenderItemInfo,
+} from "react-native";
 import { Svg } from "react-native-svg";
 import {
   MapPin,
@@ -29,55 +33,107 @@ import {
   MessageSquare,
 } from "lucide-react-native";
 
+interface Item {
+  id: string;
+  name: string;
+  address: string;
+  star: string;
+  message: string;
+  distance: string;
+}
+
 export default function HomeScreen() {
   const { width, height } = Dimensions.get("window");
   const hijauZala = "#539D00";
   const biruZala = "#00A1FF";
+  const donkerZala = "#003C60";
   const shadow = {
     shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 0,
-    },
+    shadowOffset: { width: 0, height: 0 },
     shadowOpacity: 0.8,
     shadowRadius: 10,
     elevation: 5,
   };
+
   // make a data that consist of id name address star message distance, that each name diffrent from each other
-  const data = [
+
+  const [artikel, setArtikel] = useState([
     {
-      id: 1,
-      name: "Zala 1",
-      address: "Jl. Kedondong No.12....",
-      star: 4.5,
-      message: 11,
-      distance: "200m",
+      id: "1",
+      judul: "Zala Laundry IPO dibuka untuk umum",
+      deskripsi:
+        "Zala Laundry IPO dibuka untuk umum, buka harga Rp. 1000 / saham",
+      foto: "undang.png",
+      tanggal: "12 November 2021",
     },
     {
-      id: 2,
-      name: "Zala 2",
-      address: "Jl. ayam No.12....",
-      star: 4.5,
-      message: 11,
-      distance: "200m",
+      id: "2",
+      judul: "Zala Laundry IPO dibuka untuk umum",
+      deskripsi:
+        "Zala Laundry IPO dibuka untuk umum, buka harga Rp. 1000 / saham",
+      foto: "undang.png",
+      tanggal: "12 November 2021",
     },
     {
-      id: 3,
-      name: "Zala 3",
-      address: "Jl. gorenng No.12....",
-      star: 4.5,
-      message: 11,
-      distance: "200m",
+      id: "3",
+      judul: "Zala Laundry IPO dibuka untuk umum",
+      deskripsi:
+        "Zala Laundry IPO dibuka untuk umum, buka harga Rp. 1000 / saham",
+      foto: "undang.png",
+      tanggal: "12 November 2021",
+    },
+  ]);
+
+  const [laundry, setLaundry] = useState([
+    {
+      id: "1",
+      name: "Zala Laundry",
+      address: "Jl. Kedondong No.12",
+      star: "4.8",
+      message: "11+",
+      distance: "1.2 km",
     },
     {
-      id: 4,
-      name: "Zala 4",
-      address: "Jl. lalapan No.12....",
-      star: 4.5,
-      message: 11,
-      distance: "200m",
+      id: "2",
+      name: "Zala Laundry",
+      address: "Jl. Kedondong No.12",
+      star: "4.8",
+      message: "11+",
+      distance: "1.2 km",
     },
-  ];
+    {
+      id: "3",
+      name: "Zala Laundry",
+      address: "Jl. Kedondong No.12",
+      star: "4.8",
+      message: "11+",
+      distance: "1.2 km",
+    },
+    {
+      id: "4",
+      name: "Zala Laundry",
+      address: "Jl. Kedondong No.12",
+      star: "4.8",
+      message: "11+",
+      distance: "1.2 km",
+    },
+    {
+      id: "5",
+      name: "Zala Laundry",
+      address: "Jl. Kedondong No.12",
+      star: "4.8",
+      message: "11+",
+      distance: "1.2 km",
+    },
+    {
+      id: "6",
+      name: "Zala Laundry",
+      address: "Jl. Kedondong No.12",
+      star: "4.8",
+      message: "11+",
+      distance: "1.2 km",
+    },
+  ]);
 
   return (
     <ScrollView>
@@ -88,17 +144,16 @@ export default function HomeScreen() {
             <VStack space="xs" flex={1}>
               <HStack space="sm">
                 <MapPin color="white" size={24} strokeWidth={2.25} />
-
                 <Text color="white">Lokasi Penjemputan</Text>
               </HStack>
               <HStack space="sm">
                 <Text bold color="white">
-                  Jl. Kedondong No.12....
+                  {" "}
+                  Jl. Kedondong No.12....{" "}
                 </Text>
                 <ChevronDown color="white" strokeWidth={"2.25"} />
               </HStack>
             </VStack>
-
             <Box
               bgColor="white"
               w={"$10"}
@@ -193,7 +248,7 @@ export default function HomeScreen() {
             borderBottomRightRadius={40}
             space="lg"
           >
-            <Text bold fontSize={20} color="black">
+            <Text bold fontSize={20} color={donkerZala}>
               Fitur Layanan
             </Text>
             <HStack justifyContent="space-between">
@@ -205,7 +260,7 @@ export default function HomeScreen() {
                       alt="washing-machine"
                     />
                   </Center>
-                  <Text bold fontSize={14} color="#003C60">
+                  <Text bold fontSize={14} color={donkerZala}>
                     Laundry
                   </Text>
                 </VStack>
@@ -275,7 +330,7 @@ export default function HomeScreen() {
             space="lg"
           >
             <HStack justifyContent="space-between" alignItems="center">
-              <Text bold fontSize={20} color="black">
+              <Text bold fontSize={20} color="#003c60">
                 Rekomendasi Laundry
               </Text>
 
@@ -287,77 +342,303 @@ export default function HomeScreen() {
             </HStack>
             <Box flex={1}>
               <FlatList
-                data={data}
-                // declare item as a type of data
-
+                data={laundry}
                 renderItem={({ item }) => (
                   <Box
                     w={170}
-                    h={190}
+                    h={200}
                     borderWidth={1}
                     borderRadius={20}
-                    borderColor="#d1d1d1"
+                    borderColor="#e6e6e6"
+                    bgColor="white"
                     mr={10}
+                    mb={10}
                   >
-                    <VStack flex={1} space="xs">
-                      <Box>
-                        <Image
-                          source={require("../../../assets/Images/Home/zalalaundry.png")}
-                          alt="washing-machine"
-                        />
-                      </Box>
-                      <Box px={10}>
-                        <Text
-                          bold
-                          fontSize={14}
-                          color="black"
-                          fontWeight="$semibold"
-                        >
-                          {(item as { name: string }).name}
-                        </Text>
-                        <Text fontSize={12} color="#515151">
-                          {(item as { address: string }).address}
-                        </Text>
-                        <HStack justifyContent="space-between">
-                          <HStack alignItems="center" space="xs">
-                            <Star size={16} color="#ffd500" />
-                            <Text
-                              fontSize={12}
-                              fontWeight="$semibold"
-                              color="#515151"
-                            >
-                              {(item as { star: string }).star}
-                            </Text>
-                          </HStack>
-                          <HStack alignItems="center" space="xs">
-                            <MessageSquare size={16} color="#515151" />
-                            <Text
-                              fontSize={12}
-                              fontWeight="$semibold"
-                              color="#515151"
-                            >
-                              {(item as { message: string }).message}
-                            </Text>
-                          </HStack>
-                          <HStack alignItems="center" space="xs">
-                            <MapPin size={16} color="#515151" />
-                            <Text
-                              fontSize={12}
-                              fontWeight="$semibold"
-                              color="#515151"
-                            >
-                              {(item as { distance: string }).distance}
-                            </Text>
-                          </HStack>
+                    <Image
+                      source={require("../../../assets/Images/Home/zalalaundry.png")}
+                      alt="Laundry"
+                      borderTopLeftRadius={20}
+                      borderTopRightRadius={20}
+                      w={168}
+                      h={120}
+                    />
+                    <VStack p={4}>
+                      <Text fontWeight="$semibold" fontSize={14}>
+                        {item.name}
+                      </Text>
+                      <Text fontSize={12} color="#515151">
+                        {item.address}
+                      </Text>
+                      <HStack
+                        space={"sm"}
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <HStack alignItems="center">
+                          <Star size={16} color="#FFC107" />
+                          <Text
+                            fontSize={12}
+                            fontWeight="$semibold"
+                            color="#515151"
+                          >
+                            {item.star}
+                          </Text>
                         </HStack>
-                      </Box>
+                        <HStack alignItems="center">
+                          <MessageSquare size={16} color="#515151" />
+                          <Text
+                            fontSize={12}
+                            fontWeight="$semibold"
+                            color="#515151"
+                          >
+                            {item.message}
+                          </Text>
+                        </HStack>
+                        <HStack alignItems="center">
+                          <MapPin size={16} color="#515151" />
+                          <Text
+                            fontSize={12}
+                            fontWeight="$semibold"
+                            color="#515151"
+                          >
+                            {item.distance}
+                          </Text>
+                        </HStack>
+                      </HStack>
                     </VStack>
                   </Box>
                 )}
-                keyExtractor={(item) => item.id}
                 horizontal={true}
                 showsHorizontalScrollIndicator={false}
-              ></FlatList>
+                keyExtractor={(item) => item.id}
+              />
+            </Box>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Text bold fontSize={20} color={donkerZala}>
+                Terdekat
+              </Text>
+
+              <Box bgColor="#B3E3FF" py={5} px={18} borderRadius={20}>
+                <Text bold fontSize={14} color={biruZala}>
+                  Lihat Semua
+                </Text>
+              </Box>
+            </HStack>
+            <Box flex={1}>
+              <FlatList
+                data={laundry}
+                renderItem={({ item }) => (
+                  <Box
+                    w={170}
+                    h={200}
+                    borderWidth={1}
+                    borderRadius={20}
+                    borderColor="#e6e6e6"
+                    bgColor="white"
+                    mr={10}
+                    mb={10}
+                  >
+                    <Image
+                      source={require("../../../assets/Images/Home/zalalaundry.png")}
+                      alt="Laundry"
+                      borderTopLeftRadius={20}
+                      borderTopRightRadius={20}
+                      w={168}
+                      h={120}
+                    />
+                    <VStack p={4}>
+                      <Text fontWeight="$semibold" fontSize={14}>
+                        {item.name}
+                      </Text>
+                      <Text fontSize={12} color="#515151">
+                        {item.address}
+                      </Text>
+                      <HStack
+                        space={"sm"}
+                        alignItems="center"
+                        justifyContent="space-between"
+                      >
+                        <HStack alignItems="center">
+                          <Star size={16} color="#FFC107" />
+                          <Text
+                            fontSize={12}
+                            fontWeight="$semibold"
+                            color="#515151"
+                          >
+                            {item.star}
+                          </Text>
+                        </HStack>
+                        <HStack alignItems="center">
+                          <MessageSquare size={16} color="#515151" />
+                          <Text
+                            fontSize={12}
+                            fontWeight="$semibold"
+                            color="#515151"
+                          >
+                            {item.message}
+                          </Text>
+                        </HStack>
+                        <HStack alignItems="center">
+                          <MapPin size={16} color="#515151" />
+                          <Text
+                            fontSize={12}
+                            fontWeight="$semibold"
+                            color="#515151"
+                          >
+                            {item.distance}
+                          </Text>
+                        </HStack>
+                      </HStack>
+                    </VStack>
+                  </Box>
+                )}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.id}
+              />
+            </Box>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Text bold fontSize={20} color={donkerZala}>
+                Baru di Zala Mobile
+              </Text>
+            </HStack>
+            <Box flex={1}>
+              <FlatList
+                data={laundry}
+                renderItem={({ item }) => (
+                  <Box
+                    w={336}
+                    h={146}
+                    borderWidth={1}
+                    borderRadius={20}
+                    borderColor="#e6e6e6"
+                    bgColor="white"
+                    mr={10}
+                    mb={10}
+                  >
+                    <Image
+                      source={require("../../../assets/Images/Home/news.png")}
+                      alt="Laundry"
+                      borderRadius={20}
+                      size="full"
+                      resizeMode="stretch"
+                    />
+                  </Box>
+                )}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.id}
+              />
+            </Box>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Text bold fontSize={20} color={donkerZala}>
+                Undang Teman
+              </Text>
+            </HStack>
+            <Box flex={1}>
+              <FlatList
+                data={laundry}
+                renderItem={({ item }) => (
+                  <Box
+                    w={336}
+                    h={146}
+                    borderWidth={1}
+                    borderRadius={20}
+                    borderColor="#e6e6e6"
+                    bgColor="white"
+                    mr={10}
+                    mb={10}
+                  >
+                    <Image
+                      source={require("../../../assets/Images/Home/undang.png")}
+                      alt="Laundry"
+                      borderRadius={20}
+                      size="full"
+                      resizeMode="stretch"
+                    />
+                  </Box>
+                )}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.id}
+              />
+            </Box>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Text bold fontSize={20} color={donkerZala}>
+                Informasi & Event
+              </Text>
+            </HStack>
+            <Box flex={1}>
+              <FlatList
+                data={laundry}
+                renderItem={({ item }) => (
+                  <Box
+                    w={336}
+                    h={146}
+                    borderWidth={1}
+                    borderRadius={20}
+                    borderColor="#e6e6e6"
+                    bgColor="white"
+                    mr={10}
+                    mb={10}
+                  >
+                    <Image
+                      source={require("../../../assets/Images/Home/event.png")}
+                      alt="Laundry"
+                      borderRadius={20}
+                      size="full"
+                      resizeMode="stretch"
+                    />
+                  </Box>
+                )}
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.id}
+              />
+            </Box>
+            <HStack justifyContent="space-between" alignItems="center">
+              <Text bold fontSize={20} color={donkerZala}>
+                Artikel Zala Mobile
+              </Text>
+            </HStack>
+            <Box flex={1}>
+              <FlatList
+                data={artikel}
+                renderItem={({ item }) => (
+                  <HStack borderRadius={20} bgColor="white" mr={10} mb={14} space="md">
+                    <Image
+                      source={require("../../../assets/Images/Home/orang.png")}
+                      alt="Laundry"
+                      borderRadius={20}
+                      width={80}
+                      height={80}
+                      borderBottomLeftRadius={50}
+                      borderTopLeftRadius={50}
+                      borderTopRightRadius={50}
+                      borderBottomRightRadius={50}
+                      resizeMode="stretch"
+                    />
+                    <VStack>
+                      <Text
+                        fontWeight="$semibold"
+                        fontSize={16}
+                        color={donkerZala}
+                        >
+                          {item.judul}
+                        </Text>
+                        <Text fontSize={12} color="#515151" fontWeight="$normal">
+                          {item.deskripsi}
+                        </Text>
+                        <Text fontSize={12} color={biruZala} italic>
+                          {item.tanggal}
+                        </Text>
+                    </VStack>
+                  </HStack>
+                )}
+                horizontal={false}
+                showsHorizontalScrollIndicator={false}
+                keyExtractor={(item) => item.id}
+              />
             </Box>
           </VStack>
         </VStack>
