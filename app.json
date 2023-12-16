@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "expo-app",
+    "name": "Zala Mobile",
     "slug": "expo-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -14,10 +14,24 @@
     "assetBundlePatterns": [
       "**/*"
     ],
+    "plugins": [
+      "@react-native-google-signin/google-signin"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.raihan.zalamobile",
+      "infoPlist": {
+        "CFBundleURLTypes": [
+          {
+            "CFBundleURLSchemes": [
+              "com.googleusercontent.apps.310889988474-3rrmf22i7fi63l7em9o4sl65un4ufm2r"
+            ]
+          }
+        ]
+      }
     },
     "android": {
+      "package": "com.raihan.zalamobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
@@ -25,6 +39,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7b6ef210-4cb6-4955-832a-c61c3de2513a"
+      }
     }
   }
 }

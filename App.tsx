@@ -1,19 +1,77 @@
-import { Box, GluestackUIProvider, Text, config } from '@gluestack-ui/themed';
-import { ScrollView } from 'react-native';
-import Gradient from './assets/Icons/Gradient';
-import DocumentData from './assets/Icons/DocumentData';
-import LightBulbPerson from './assets/Icons/LightbulbPerson'; 
-import Rocket from './assets/Icons/Rocket';
-import Logo from './assets/Icons/Logo';
-import Home from './src/screens/Home/HomeScreen';
-import Topup from './src/screens/Topup/TopupScreen';
-import Membership from './src/screens/Membership/RedeemHistoryScreen';
-
+import {
+  Box,
+  GluestackUIProvider,
+  Text,
+  config,
+  set,
+} from "@gluestack-ui/themed";
+import { ScrollView, Button } from "react-native";
+import Gradient from "./assets/Icons/Gradient";
+import DocumentData from "./assets/Icons/DocumentData";
+import LightBulbPerson from "./assets/Icons/LightbulbPerson";
+import Rocket from "./assets/Icons/Rocket";
+import Logo from "./assets/Icons/Logo";
+import Home from "./src/screens/Home/HomeScreen";
+import Topup from "./src/screens/Topup/TopupScreen";
+import Login from "./src/screens/Auth/LoginScreen";
+import Membership from "./src/screens/Membership/RedeemHistoryScreen";
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
+import { useEffect, useState } from "react";
 
 export default function App() {
+  // const [error, setError] = useState();
+  // const [userInfo, setUserInfo] = useState();
+  // const configureGoogleSignIn = () => {
+  //   GoogleSignin.configure({
+  //     webClientId:
+  //       "310889988474-im52i6sim05s89so7q4vkisbv7tvh27r.apps.googleusercontent.com",
+  //     androidClientId:
+  //       "310889988474-0g8590nfh2jqcp7mjmu68o6reo8t5q06.apps.googleusercontent.com",
+  //     iosClientId:
+  //       "310889988474-3rrmf22i7fi63l7em9o4sl65un4ufm2r.apps.googleusercontent.com",
+  //   });
+  // };
+
+  // useEffect(() => {
+  //   configureGoogleSignIn();
+  // });
+
+  // const signIn = async () => {
+  //   console.log("sign in pressed");
+  //   try {
+  //     await GoogleSignin.hasPlayServices();
+  //     const userInfo = await GoogleSignin.signIn();
+  //     setUserInfo(userInfo);
+  //   } catch (e) {
+  //     setError(e);
+  //   }
+  // };
+
+  // const Logout = async () => {
+  //   await GoogleSignin.revokeAccess();
+  //   await GoogleSignin.signOut();
+  //   setUserInfo(undefined);
+  // };
+
   return (
     <GluestackUIProvider>
-      <Home />
+      {/* {userInfo && <Text>{JSON.stringify(userInfo.user)}</Text>}
+      <Text>{JSON.stringify(error)}</Text>
+      {userInfo ? (
+        <Button title="Sign Out" onPress={Logout} />
+      ) : (
+        <GoogleSigninButton
+          size={GoogleSigninButton.Size.Wide}
+          color={GoogleSigninButton.Color.Dark}
+          onPress={signIn}
+        />
+      )} */}
+
+      <Login />
     </GluestackUIProvider>
   );
 }
@@ -53,17 +111,17 @@ const Container = () => {
   return (
     <Box flex={1} backgroundColor="$black">
       <ScrollView
-        style={{ height: '100%' }}
+        style={{ height: "100%" }}
         contentContainerStyle={{ flexGrow: 1 }}
       >
         <Box
           position="absolute"
           sx={{
-            '@base': {
+            "@base": {
               h: 500,
               w: 500,
             },
-            '@lg': {
+            "@lg": {
               h: 700,
               w: 700,
             },
@@ -74,14 +132,14 @@ const Container = () => {
         <Box
           height="60%"
           sx={{
-            '@base': {
-              my: '$16',
-              mx: '$5',
-              height: '80%',
+            "@base": {
+              my: "$16",
+              mx: "$5",
+              height: "80%",
             },
-            '@lg': {
-              my: '$24',
-              mx: '$32',
+            "@lg": {
+              my: "$24",
+              mx: "$32",
             },
           }}
           justifyContent="space-between"
@@ -95,13 +153,13 @@ const Container = () => {
             alignItems="center"
             marginTop={20}
             sx={{
-              '@base': {
-                flexDirection: 'column',
+              "@base": {
+                flexDirection: "column",
               },
-              '@sm': {
-                flexDirection: 'row',
+              "@sm": {
+                flexDirection: "row",
               },
-              '@md': { alignSelf: 'flex-start' },
+              "@md": { alignSelf: "flex-start" },
             }}
           >
             <Text color="$white" fontWeight="$normal">
@@ -116,11 +174,11 @@ const Container = () => {
           </Box>
           <Box
             sx={{
-              '@base': {
-                flexDirection: 'column',
+              "@base": {
+                flexDirection: "column",
               },
-              '@md': {
-                flexDirection: 'row',
+              "@md": {
+                flexDirection: "row",
               },
             }}
           >
