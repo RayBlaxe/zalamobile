@@ -8,12 +8,12 @@ import {
   AddIcon,
   Image,
   Center,
-  FlatList,
 } from "@gluestack-ui/themed";
 import {
   ScrollView,
   Dimensions,
   StatusBar,
+  FlatList,
   ListRenderItemInfo,
 } from "react-native";
 import { Svg } from "react-native-svg";
@@ -55,7 +55,15 @@ export default function HomeScreen() {
     elevation: 5,
   };
 
-  // make a data that consist of id name address star message distance, that each name diffrent from each other
+
+  interface LaundryItem {
+    id: string;
+    name: string;
+    address: string;
+    star: string;
+    message: string;
+    distance: string;
+  }
 
   const [artikel, setArtikel] = useState([
     {
@@ -84,7 +92,7 @@ export default function HomeScreen() {
     },
   ]);
 
-  const [laundry, setLaundry] = useState([
+  const laundry: LaundryItem[]=[
     {
       id: "1",
       name: "Zala Laundry",
@@ -133,7 +141,7 @@ export default function HomeScreen() {
       message: "11+",
       distance: "1.2 km",
     },
-  ]);
+  ];
 
   return (
     <ScrollView>
@@ -147,10 +155,7 @@ export default function HomeScreen() {
                 <Text color="white">Lokasi Penjemputan</Text>
               </HStack>
               <HStack space="sm">
-                <Text bold color="white">
-                  {" "}
-                  Jl. Kedondong No.12....{" "}
-                </Text>
+                <Text bold color="white">{" "}Jl. Kedondong No.12....{" "}</Text>
                 <ChevronDown color="white" strokeWidth={"2.25"} />
               </HStack>
             </VStack>
@@ -191,12 +196,8 @@ export default function HomeScreen() {
               <Wallet color="white" strokeWidth={2.25} width={46} height={46} />
             </Box>
             <VStack space="sm">
-              <Text fontWeight="$medium" fontSize={14} color="#676767">
-                Saldo Anda
-              </Text>
-              <Text fontWeight="$semibold" fontSize={20}>
-                Rp. 100.000
-              </Text>
+              <Text fontWeight="$medium" fontSize={14} color="#676767">Saldo Anda</Text>
+              <Text fontWeight="$semibold" fontSize={20}>Rp. 100.000</Text>
             </VStack>
             <Box flex={1} alignItems="flex-end">
               <VStack alignItems="center">
@@ -216,9 +217,7 @@ export default function HomeScreen() {
                     height={46}
                   />
                 </Box>
-                <Text fontSize={12} fontWeight="$semibold" color={biruZala}>
-                  Top Up
-                </Text>
+                <Text fontSize={12} fontWeight="$semibold" color={biruZala}>Top Up</Text>
               </VStack>
             </Box>
             <VStack alignItems="center">
@@ -233,9 +232,7 @@ export default function HomeScreen() {
               >
                 <Plus color="white" strokeWidth={2.25} width={38} height={46} />
               </Box>
-              <Text fontSize={12} fontWeight="$semibold" color={biruZala}>
-                Riwayat
-              </Text>
+              <Text fontSize={12} fontWeight="$semibold" color={biruZala}>Riwayat</Text>
             </VStack>
           </HStack>
         </Box>
@@ -248,9 +245,7 @@ export default function HomeScreen() {
             borderBottomRightRadius={40}
             space="lg"
           >
-            <Text bold fontSize={20} color={donkerZala}>
-              Fitur Layanan
-            </Text>
+            <Text bold fontSize={20} color={donkerZala}>Fitur Layanan</Text>
             <HStack justifyContent="space-between">
               <Box w={70} h={82}>
                 <VStack alignItems="center">
@@ -260,9 +255,7 @@ export default function HomeScreen() {
                       alt="washing-machine"
                     />
                   </Center>
-                  <Text bold fontSize={14} color={donkerZala}>
-                    Laundry
-                  </Text>
+                  <Text bold fontSize={14} color={donkerZala}>Laundry</Text>
                 </VStack>
               </Box>
               <Box w={70} h={82}>
@@ -270,9 +263,7 @@ export default function HomeScreen() {
                   <Center w={55} h={55} bgColor={biruZala} borderRadius={100}>
                     <Store size={30} color="white" />
                   </Center>
-                  <Text bold fontSize={14} color="#003C60">
-                    Zala Store
-                  </Text>
+                  <Text bold fontSize={14} color="#003C60">Zala Store</Text>
                 </VStack>
               </Box>
               <Box w={70} h={82}>
@@ -280,9 +271,7 @@ export default function HomeScreen() {
                   <Center w={55} h={55} bgColor={biruZala} borderRadius={100}>
                     <BadgePercent size={32} color="white" />
                   </Center>
-                  <Text bold fontSize={14} color="#003C60">
-                    Promo
-                  </Text>
+                  <Text bold fontSize={14} color="#003C60">Promo</Text>
                 </VStack>
               </Box>
               <Box w={70} h={82}>
@@ -290,9 +279,7 @@ export default function HomeScreen() {
                   <Center w={55} h={55} bgColor={biruZala} borderRadius={100}>
                     <Users size={32} color="white" />
                   </Center>
-                  <Text textAlign="center" bold fontSize={14} color="#003C60">
-                    Layanan B to B
-                  </Text>
+                  <Text textAlign="center" bold fontSize={14} color="#003C60">Layanan B to B</Text>
                 </VStack>
               </Box>
             </HStack>
@@ -302,9 +289,7 @@ export default function HomeScreen() {
                   <Center w={55} h={55} bgColor={biruZala} borderRadius={100}>
                     <Link size={32} color="white" />
                   </Center>
-                  <Text bold fontSize={14} color="#003C60">
-                    Kontak
-                  </Text>
+                  <Text bold fontSize={14} color="#003C60">Kontak</Text>
                 </VStack>
               </Box>
               <Box w={70} h={82}>
@@ -341,7 +326,7 @@ export default function HomeScreen() {
               </Box>
             </HStack>
             <Box flex={1}>
-              <FlatList
+              <FlatList<LaundryItem>
                 data={laundry}
                 renderItem={({ item }) => (
                   <Box
@@ -363,12 +348,8 @@ export default function HomeScreen() {
                       h={120}
                     />
                     <VStack p={4}>
-                      <Text fontWeight="$semibold" fontSize={14}>
-                        {item.name}
-                      </Text>
-                      <Text fontSize={12} color="#515151">
-                        {item.address}
-                      </Text>
+                      <Text fontWeight="$semibold" fontSize={14}>{item.name}</Text>
+                      <Text fontSize={12} color="#515151">{item.address}</Text>
                       <HStack
                         space={"sm"}
                         alignItems="center"
@@ -380,9 +361,7 @@ export default function HomeScreen() {
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >
-                            {item.star}
-                          </Text>
+                          >{item.star}</Text>
                         </HStack>
                         <HStack alignItems="center">
                           <MessageSquare size={16} color="#515151" />
@@ -390,9 +369,7 @@ export default function HomeScreen() {
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >
-                            {item.message}
-                          </Text>
+                          >{item.message}</Text>
                         </HStack>
                         <HStack alignItems="center">
                           <MapPin size={16} color="#515151" />
@@ -400,9 +377,7 @@ export default function HomeScreen() {
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >
-                            {item.distance}
-                          </Text>
+                          >{item.distance}</Text>
                         </HStack>
                       </HStack>
                     </VStack>
@@ -447,12 +422,8 @@ export default function HomeScreen() {
                       h={120}
                     />
                     <VStack p={4}>
-                      <Text fontWeight="$semibold" fontSize={14}>
-                        {item.name}
-                      </Text>
-                      <Text fontSize={12} color="#515151">
-                        {item.address}
-                      </Text>
+                      <Text fontWeight="$semibold" fontSize={14}>{item.name}</Text>
+                      <Text fontSize={12} color="#515151">{item.address}</Text>
                       <HStack
                         space={"sm"}
                         alignItems="center"
@@ -464,9 +435,7 @@ export default function HomeScreen() {
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >
-                            {item.star}
-                          </Text>
+                          >{item.star}</Text>
                         </HStack>
                         <HStack alignItems="center">
                           <MessageSquare size={16} color="#515151" />
@@ -474,9 +443,7 @@ export default function HomeScreen() {
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >
-                            {item.message}
-                          </Text>
+                          >{item.message}</Text>
                         </HStack>
                         <HStack alignItems="center">
                           <MapPin size={16} color="#515151" />
@@ -484,10 +451,8 @@ export default function HomeScreen() {
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >
-                            {item.distance}
-                          </Text>
-                        </HStack>
+                          >{item.distance}</Text>
+                        </HStack>x``
                       </HStack>
                     </VStack>
                   </Box>
@@ -498,9 +463,7 @@ export default function HomeScreen() {
               />
             </Box>
             <HStack justifyContent="space-between" alignItems="center">
-              <Text bold fontSize={20} color={donkerZala}>
-                Baru di Zala Mobile
-              </Text>
+              <Text bold fontSize={20} color={donkerZala}>Baru di Zala Mobile</Text>
             </HStack>
             <Box flex={1}>
               <FlatList
@@ -623,15 +586,9 @@ export default function HomeScreen() {
                         fontWeight="$semibold"
                         fontSize={16}
                         color={donkerZala}
-                        >
-                          {item.judul}
-                        </Text>
-                        <Text fontSize={12} color="#515151" fontWeight="$normal">
-                          {item.deskripsi}
-                        </Text>
-                        <Text fontSize={12} color={biruZala} italic>
-                          {item.tanggal}
-                        </Text>
+                        >{item.judul}</Text>
+                        <Text fontSize={12} color="#515151" fontWeight="$normal">{item.deskripsi}</Text>
+                        <Text fontSize={12} color={biruZala} italic>{item.tanggal}</Text>
                     </VStack>
                   </HStack>
                 )}

@@ -1,4 +1,4 @@
-import { set } from "@gluestack-style/react";
+import { get, set } from "@gluestack-style/react";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -27,6 +27,7 @@ import {
   GoogleSigninButton,
   statusCodes,
 } from "@react-native-google-signin/google-signin";
+import * as SecureStore from "expo-secure-store";
 
 
 const LoginScreen = () => {
@@ -50,10 +51,12 @@ const LoginScreen = () => {
   const signIn = async () => {
     console.log("sign in pressed");
     try {
-      await GoogleSignin.hasPlayServices();
       const userInfo = await GoogleSignin.signIn();
+      await GoogleSignin.hasPlayServices();
+      // await SecureStore.setItemAsync(userInfo.user.id, userInfo);
       setUserInfo(userInfo);
-    } catch (e) {
+      
+    } catch (e:any) {
       setError(e);
     }
   };
@@ -65,9 +68,10 @@ const LoginScreen = () => {
   };
 
 
-  const [password, setPassword] = useState("");
-  const [phonenumber, setPhonenumber] = useState("");
+  const [password, setPassword] = useState(null);
+  const [phonenumber, setPhonenumber] = useState(null);
   const handleLogin = () => {
+    getSecureValue();
     // Perform login logic here
     console.log("Logging in...");
   };
@@ -75,6 +79,21 @@ const LoginScreen = () => {
   const biruZala = "#00A1FF";
   const donkerZala = "#003C60";
   const [visible, setVisible] = useState(true);
+  const [key, setKey] = useState();
+  const [value, setValue] = useState();
+  
+
+ 
+  const getSecureValue = async () => {
+    let result = await SecureStore.getItemAsync(userInfo.user.id);
+    setValue(result);
+  }
+
+  const deleteSecureValue = async () => {
+    await SecureStore.deleteItemAsync(key);
+    setKey();
+    setValue();
+  }
 
   return (
     <ImageBackground
@@ -122,11 +141,11 @@ const LoginScreen = () => {
           style={styles.input}
           placeholder="Masukkan password"
           secureTextEntry
-          value={password}
+          value={value}
           onChangeText={setPassword}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <TouchableOpacity style={styles.button} onPress={getSecureValue}>
           <Text style={styles.buttonText}>Masuk</Text>
         </TouchableOpacity>
         <View
@@ -151,7 +170,7 @@ const LoginScreen = () => {
           </View>
           <View style={{ flex: 1, height: 1, backgroundColor: "#878787" }} />
         </View>
-        {userInfo && <Text>{JSON.stringify(userInfo.user)}</Text>}
+        {userInfo ? <Text>{JSON.stringify(userInfo.user)}</Text> : null}
       <Text>{JSON.stringify(error)}</Text>
         {userInfo ? (
         <Button title="Sign Out" onPress={Logout} />

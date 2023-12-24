@@ -5,7 +5,7 @@ import {
   config,
   set,
 } from "@gluestack-ui/themed";
-import { ScrollView, Button } from "react-native";
+import { ScrollView, Button, TextInput } from "react-native";
 import Gradient from "./assets/Icons/Gradient";
 import DocumentData from "./assets/Icons/DocumentData";
 import LightBulbPerson from "./assets/Icons/LightbulbPerson";
@@ -14,6 +14,7 @@ import Logo from "./assets/Icons/Logo";
 import Home from "./src/screens/Home/HomeScreen";
 import Topup from "./src/screens/Topup/TopupScreen";
 import Login from "./src/screens/Auth/LoginScreen";
+import Registration from "./src/screens/Auth/RegistrationScreen";
 import Membership from "./src/screens/Membership/RedeemHistoryScreen";
 import {
   GoogleSignin,
@@ -21,8 +22,13 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import { useEffect, useState } from "react";
+import * as SecureStore from "expo-secure-store";
 
 export default function App() {
+ 
+
+ 
+
   // const [error, setError] = useState();
   // const [userInfo, setUserInfo] = useState();
   // const configureGoogleSignIn = () => {
@@ -59,25 +65,13 @@ export default function App() {
 
   return (
     <GluestackUIProvider>
-      {/* {userInfo && <Text>{JSON.stringify(userInfo.user)}</Text>}
-      <Text>{JSON.stringify(error)}</Text>
-      {userInfo ? (
-        <Button title="Sign Out" onPress={Logout} />
-      ) : (
-        <GoogleSigninButton
-          size={GoogleSigninButton.Size.Wide}
-          color={GoogleSigninButton.Color.Dark}
-          onPress={signIn}
-        />
-      )} */}
-
-      <Login />
+      <Home />
     </GluestackUIProvider>
   );
 }
 
 // const Home = () => {
-//   return <Container />;
+//   return <Container />
 // };
 
 const FeatureCard = ({ iconSvg: IconSvg, name, desc }: any) => {
@@ -92,7 +86,6 @@ const FeatureCard = ({ iconSvg: IconSvg, name, desc }: any) => {
       rounded="$md"
     >
       <Box alignItems="center" display="flex" flexDirection="row">
-        {/* <Image source={iconSvg} alt="document" width={22} height={22} /> */}
         <Text>
           <IconSvg />
         </Text>
