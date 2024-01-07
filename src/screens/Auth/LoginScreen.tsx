@@ -28,11 +28,9 @@ import {
   statusCodes,
 } from "@react-native-google-signin/google-signin";
 import * as SecureStore from "expo-secure-store";
+import auth from "@react-native-firebase/auth"
 
-
-const LoginScreen = () => {
-  const [error, setError] = useState();
-  const [userInfo, setUserInfo] = useState();
+const LoginScreen = ({ navigation }) => {
   const configureGoogleSignIn = () => {
     GoogleSignin.configure({
       webClientId:
@@ -43,57 +41,63 @@ const LoginScreen = () => {
         "310889988474-3rrmf22i7fi63l7em9o4sl65un4ufm2r.apps.googleusercontent.com",
     });
   };
+  const [error, setError] = useState();
+  const [userInfo, setUserInfo] = useState();
 
-  useEffect(() => {
-    configureGoogleSignIn();
-  });
+ 
 
-  const signIn = async () => {
-    console.log("sign in pressed");
+  const doLogin = async () => {
+    await SecureStore.setItemAsync("session", "is_logged_in")
+
+    navigation.navigate("register")
+  }
+
+  async function onGoogleButtonPress() {
     try {
-      const userInfo = await GoogleSignin.signIn();
-      await GoogleSignin.hasPlayServices();
-      // await SecureStore.setItemAsync(userInfo.user.id, userInfo);
-      setUserInfo(userInfo);
-      
-    } catch (e:any) {
-      setError(e);
+      // Check if your device supports Google Play
+      console.log("CHECKING PLAY SERVICES")
+      await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true })
+      console.log("PLAY SERVICES OK")
+
+      // Get the users ID token
+      console.log("GETTING ID TOKEN")
+      const { idToken } = await GoogleSignin.signIn()
+      console.log("ID TOKEN", idToken)
+
+      // Create a Google credential with the token
+      console.log("CREATING CREDENTIAL")
+      const googleCredential = auth.GoogleAuthProvider.credential(idToken)
+      console.log("CREDENTIAL", googleCredential)
+
+      // Sign-in the user with the credential
+      console.log("SIGNING IN")
+      const userSignIn = await auth().signInWithCredential(googleCredential)
+      console.log("SIGNED IN", userSignIn)
+
+      // navigation.navigate("home")
+
+      doLogin()
+    } catch (error) {
+      console.log("LOGIN ERROR", error)
     }
-  };
-
-  const Logout = async () => {
-    await GoogleSignin.revokeAccess();
-    await GoogleSignin.signOut();
-    setUserInfo(undefined);
-  };
-
+  }
 
   const [password, setPassword] = useState(null);
   const [phonenumber, setPhonenumber] = useState(null);
-  const handleLogin = () => {
-    getSecureValue();
-    // Perform login logic here
-    console.log("Logging in...");
-  };
+  
   const hijauZala = "#539D00";
   const biruZala = "#00A1FF";
   const donkerZala = "#003C60";
   const [visible, setVisible] = useState(true);
   const [key, setKey] = useState();
   const [value, setValue] = useState();
-  
 
  
-  const getSecureValue = async () => {
-    let result = await SecureStore.getItemAsync(userInfo.user.id);
-    setValue(result);
-  }
 
-  const deleteSecureValue = async () => {
-    await SecureStore.deleteItemAsync(key);
-    setKey();
-    setValue();
-  }
+  
+  // const showUserInfo = () => {
+  //   console.log(JSON.stringify(userInfo.user));
+  // };
 
   return (
     <ImageBackground
@@ -145,7 +149,7 @@ const LoginScreen = () => {
           onChangeText={setPassword}
         />
 
-        <TouchableOpacity style={styles.button} onPress={getSecureValue}>
+        <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Masuk</Text>
         </TouchableOpacity>
         <View
@@ -170,12 +174,17 @@ const LoginScreen = () => {
           </View>
           <View style={{ flex: 1, height: 1, backgroundColor: "#878787" }} />
         </View>
-        {userInfo ? <Text>{JSON.stringify(userInfo.user)}</Text> : null}
-      <Text>{JSON.stringify(error)}</Text>
-        {userInfo ? (
-        <Button title="Sign Out" onPress={Logout} />
-      ) : (
-        <TouchableOpacity style={styles.secButton} onPress={signIn}>
+
+        <TouchableOpacity
+          style={styles.secButton}
+          onPress={async () => {
+            await SecureStore.setItemAsync("session", "is_logged_in");
+            console.log(await SecureStore.getItemAsync("session"));
+            navigation.navigate("home", {
+              animationOveride: "slide_from_bottom",
+            });
+          }}
+        >
           <HStack space="sm" alignItems="center" justifyContent="center">
             <Image
               source={require("../../../assets/Images/Auth/GIcon.png")}
@@ -185,7 +194,6 @@ const LoginScreen = () => {
             <Text style={styles.secButtonText}>Masuk dengan Google</Text>
           </HStack>
         </TouchableOpacity>
-      )}
 
         <Text
           marginTop={"$4"}
@@ -199,7 +207,7 @@ const LoginScreen = () => {
           Belum punya akun?
         </Text>
 
-        <TouchableOpacity style={styles.secButton} onPress={handleLogin}>
+        <TouchableOpacity style={styles.secButton} >
           <Text style={styles.secButtonText}>Daftar</Text>
         </TouchableOpacity>
       </View>
