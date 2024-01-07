@@ -452,7 +452,7 @@ export default function HomeScreen() {
                             fontWeight="$semibold"
                             color="#515151"
                           >{item.distance}</Text>
-                        </HStack>x``
+                        </HStack>
                       </HStack>
                     </VStack>
                   </Box>
