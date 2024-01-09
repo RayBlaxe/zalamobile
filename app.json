@@ -15,11 +15,13 @@
       "**/*"
     ],
     "plugins": [
-      "@react-native-google-signin/google-signin"
+      "@react-native-google-signin/google-signin",
+      "@react-native-firebase/app"
     ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.raihan.zalamobile",
+      "googleServicesFile": "./GoogleService-Info.plist",
       "infoPlist": {
         "CFBundleURLTypes": [
           {
@@ -31,6 +33,7 @@
       }
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "package": "com.raihan.zalamobile",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
@@ -44,6 +47,7 @@
       "eas": {
         "projectId": "7b6ef210-4cb6-4955-832a-c61c3de2513a"
       }
-    }
+    },
+    "scheme": "expo-app"
   }
 }

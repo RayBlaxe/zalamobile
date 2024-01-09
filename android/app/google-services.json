@@ -1,0 +1,39 @@
+{
+    "project_info": {
+      "project_number": "870017574309",
+      "project_id": "zala-mobile",
+      "storage_bucket": "zala-mobile.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:870017574309:android:89b1bc9cf1b2e3cb61744c",
+          "android_client_info": {
+            "package_name": "com.raihan.zalamobile"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "870017574309-rmd2mvclpr7ukb9uee45u52pnk6ungnl.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyAhl3YKYdz6p5A2xib4P5z0S4H8rgcZgRY"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "870017574309-rmd2mvclpr7ukb9uee45u52pnk6ungnl.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
