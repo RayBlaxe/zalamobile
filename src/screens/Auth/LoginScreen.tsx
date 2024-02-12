@@ -1,4 +1,3 @@
-import { get, set } from "@gluestack-style/react";
 import React, { useState, useEffect } from "react";
 import {
   View,
@@ -18,8 +17,8 @@ import {
   Icon,
   VStack,
   AddIcon,
-  Image,
   Center,
+  Image,
 } from "@gluestack-ui/themed";
 
 import {
@@ -30,8 +29,15 @@ import {
 import * as SecureStore from "expo-secure-store";
 import auth from "@react-native-firebase/auth";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { AuthRequestPromptOptions, AuthSessionResult } from "expo-auth-session";
 
-const LoginScreen = ({ promptAsync }: { promptAsync: any }) => {
+const LoginScreen = ({
+  promptAsync,
+}: {
+  promptAsync: (
+    options?: AuthRequestPromptOptions | undefined
+  ) => Promise<AuthSessionResult>;
+}) => {
   const [error, setError] = useState();
   const [userInfo, setUserInfo] = useState();
 
@@ -96,7 +102,8 @@ const LoginScreen = ({ promptAsync }: { promptAsync: any }) => {
         borderBottomRightRadius={20}
         alt="adaw"
       >
-        <StatusBar translucent={true} backgroundColor="transparent" />
+        <StatusBar translucent={true}
+        />
 
         <View style={styles.insideContainer}>
           <Image
@@ -165,7 +172,7 @@ const LoginScreen = ({ promptAsync }: { promptAsync: any }) => {
             style={styles.secButton}
             onPress={() => promptAsync()}
           >
-            <HStack space="sm" alignItems="center" justifyContent="center">
+            <HStack alignItems="center" justifyContent="center">
               <Image
                 source={require("../../../assets/Images/Auth/GIcon.png")}
                 style={{ width: 24, height: 24, alignSelf: "center" }}

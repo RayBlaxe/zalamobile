@@ -1,22 +1,26 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Text,
   HStack,
   Icon,
   VStack,
-  AddIcon,
+  
   Image,
   Center,
+  
 } from "@gluestack-ui/themed";
 import {
   ScrollView,
   Dimensions,
   StatusBar,
   FlatList,
-  ListRenderItemInfo,
+  
+  
+  TouchableOpacity,
+  StyleSheet,
 } from "react-native";
-import { Svg } from "react-native-svg";
+
 import {
   MapPin,
   ChevronDown,
@@ -31,18 +35,17 @@ import {
   Link,
   Star,
   MessageSquare,
+  WashingMachine,
 } from "lucide-react-native";
+import { useNavigation } from "@react-navigation/native";
 
-interface Item {
-  id: string;
-  name: string;
-  address: string;
-  star: string;
-  message: string;
-  distance: string;
-}
+
+
+
+
 
 export default function HomeScreen() {
+  const { navigate } = useNavigation();
   const { width, height } = Dimensions.get("window");
   const hijauZala = "#539D00";
   const biruZala = "#00A1FF";
@@ -55,7 +58,20 @@ export default function HomeScreen() {
     elevation: 5,
   };
 
-
+  interface Address {
+    id: string;
+    latitude: string;
+    longitude: string;
+    deskripsi: string;
+  }
+  
+  interface Review {
+    id: string;
+    rating: number;
+    deskripsi: string;
+    created_at: any; // Replace with actual type if available
+  }
+  
   interface LaundryItem {
     id: string;
     name: string;
@@ -64,6 +80,85 @@ export default function HomeScreen() {
     message: string;
     distance: string;
   }
+
+  const [laundry, setLaundry] = useState([]);
+
+  useEffect(() => {
+    // Fetch data when the component mounts
+    fetchLaundryData();
+  }, []);
+
+  async function fetchLaundryData() {
+    const apiUrl = "https://api.zamanlaundry.id/product/laundry/rekomendasi";
+    const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS56YW1hbmxhdW5kcnkuaWQvYXV0aC9sb2dpbiIsImlhdCI6MTcwNjEyMzczMSwiZXhwIjoxNzA2MTI3MzMxLCJuYmYiOjE3MDYxMjM3MzEsImp0aSI6InR0aXJOTlhPZG9KVGZVSUQiLCJzdWIiOiIxMzcxOGNkOS05YzQ5LTExZWUtOWQ1My1kOGJiYzE3OWFiYjciLCJwcnYiOiIyM2JkNWM4OTQ5ZjYwMGFkYjM5ZTcwMWM0MDA4NzJkYjdhNTk3NmY3In0.WkHhrE4zKP38A1s8QNKH9IepWxgO8iEb8ccjG-AxpXM"; // Replace with your actual access token
+    const apiKey = "Ikh4YE3fzOD50lPOm8HDYCRItBkJP3LnO9FjEZGLUm8KmqjA2zPsHIZh8WUjSeNs"
+  
+    // Create form data with latitude and longitude
+    const formData = new FormData();
+    formData.append('latitude', '0.4802224');
+    formData.append('longitude', '101.4159171');
+  
+    try {
+      const response = await fetch(apiUrl, {
+        method: 'POST', // Adjust the method based on the API's requirements
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'X-API-KEY': apiKey,
+        },
+        body: formData,
+      });
+  
+      const data = await response.json();
+  
+      if (data.success) {
+        const laundryData = data.data.map((item: any) => {
+          const address = item.alamat.deskripsi;
+          const truncatedAddress = address.length > 25 ? `${address.substring(0, 25)} ...` : address;
+
+          const reviews: Review[] = item.ulasan;
+  
+          return {
+            id: item.id,
+            name: item.nama_outlet,
+            address: truncatedAddress,
+            star: item.rating.toString(),
+            message: reviews.length > 0 ? reviews.length.toString() : "0",
+            distance: `${item.jarak.toFixed(2)} km`,
+          };
+        });
+  
+        setLaundry(laundryData);
+      } else {
+        console.error("Error fetching data:", data.message);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  }
+
+
+  
+  
+  // Call the function to fetch and transform the data
+  fetchLaundryData();
+  
+  
+
+  // const [isLoading, setLoading] = useState(true);
+  // const [laundry, setLaundry] = useState<LaundryItem[]>([]);
+
+
+  // const getToko = async () => {
+  //   try {
+  //     const response = await fetch('https://reactnative.dev/movies.json');
+  //     const json = await response.json();
+  //     setLaundry(json.movies);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
   const [artikel, setArtikel] = useState([
     {
@@ -92,62 +187,66 @@ export default function HomeScreen() {
     },
   ]);
 
-  const laundry: LaundryItem[]=[
-    {
-      id: "1",
-      name: "Zala Laundry",
-      address: "Jl. Kedondong No.12",
-      star: "4.8",
-      message: "11+",
-      distance: "1.2 km",
-    },
-    {
-      id: "2",
-      name: "Zala Laundry",
-      address: "Jl. Kedondong No.12",
-      star: "4.8",
-      message: "11+",
-      distance: "1.2 km",
-    },
-    {
-      id: "3",
-      name: "Zala Laundry",
-      address: "Jl. Kedondong No.12",
-      star: "4.8",
-      message: "11+",
-      distance: "1.2 km",
-    },
-    {
-      id: "4",
-      name: "Zala Laundry",
-      address: "Jl. Kedondong No.12",
-      star: "4.8",
-      message: "11+",
-      distance: "1.2 km",
-    },
-    {
-      id: "5",
-      name: "Zala Laundry",
-      address: "Jl. Kedondong No.12",
-      star: "4.8",
-      message: "11+",
-      distance: "1.2 km",
-    },
-    {
-      id: "6",
-      name: "Zala Laundry",
-      address: "Jl. Kedondong No.12",
-      star: "4.8",
-      message: "11+",
-      distance: "1.2 km",
-    },
-  ];
+  // const laundry: LaundryItem[] = [
+  //   {
+  //     id: "1",
+  //     name: "Zala Laundry",
+  //     address: "Jl. Kedondong No.12",
+  //     star: "4.8",
+  //     message: "11+",
+  //     distance: "1.2 km",
+  //   },
+  //   {
+  //     id: "2",
+  //     name: "Zala Laundry",
+  //     address: "Jl. Kedondong No.12",
+  //     star: "4.8",
+  //     message: "11+",
+  //     distance: "1.2 km",
+  //   },
+  //   {
+  //     id: "3",
+  //     name: "Zala Laundry",
+  //     address: "Jl. Kedondong No.12",
+  //     star: "4.8",
+  //     message: "11+",
+  //     distance: "1.2 km",
+  //   },
+  //   {
+  //     id: "4",
+  //     name: "Zala Laundry",
+  //     address: "Jl. Kedondong No.12",
+  //     star: "4.8",
+  //     message: "11+",
+  //     distance: "1.2 km",
+  //   },
+  //   {
+  //     id: "5",
+  //     name: "Zala Laundry",
+  //     address: "Jl. Kedondong No.12",
+  //     star: "4.8",
+  //     message: "11+",
+  //     distance: "1.2 km",
+  //   },
+  //   {
+  //     id: "6",
+  //     name: "Zala Laundry",
+  //     address: "Jl. Kedondong No.12",
+  //     star: "4.8",
+  //     message: "11+",
+  //     distance: "1.2 km",
+  //   },
+  // ];
 
   return (
     <ScrollView>
       <VStack bgColor="#fafafa">
         <Box bg={biruZala} px={"$6"} py={"$2.5"}>
-          <StatusBar animated={true} backgroundColor={"#00A1FF"} />
+          <StatusBar
+            animated={true}
+            barStyle={"dark-content"}
+            backgroundColor={"#00A1FF"}
+          />
           <HStack flex={1} alignItems="center">
             <VStack space="xs" flex={1}>
               <HStack space="sm">
@@ -155,20 +254,19 @@ export default function HomeScreen() {
                 <Text color="white">Lokasi Penjemputan</Text>
               </HStack>
               <HStack space="sm">
-                <Text bold color="white">{" "}Jl. Kedondong No.12....{" "}</Text>
+                <Text bold color="white">
+                  {" "}
+                  Jl. Kedondong No.12....{" "}
+                </Text>
                 <ChevronDown color="white" strokeWidth={"2.25"} />
               </HStack>
             </VStack>
-            <Box
-              bgColor="white"
-              w={"$10"}
-              h={"$10"}
-              p={"$2"}
-              borderRadius={"$full"}
-              alignContent="flex-end"
+            <TouchableOpacity
+              onPress={() => navigate("profile")}
+              style={styles.notif}
             >
               <Bell color={biruZala} strokeWidth={2.25} />
-            </Box>
+            </TouchableOpacity>
           </HStack>
         </Box>
         <Box>
@@ -196,8 +294,12 @@ export default function HomeScreen() {
               <Wallet color="white" strokeWidth={2.25} width={46} height={46} />
             </Box>
             <VStack space="sm">
-              <Text fontWeight="$medium" fontSize={14} color="#676767">Saldo Anda</Text>
-              <Text fontWeight="$semibold" fontSize={20}>Rp. 100.000</Text>
+              <Text fontWeight="$medium" fontSize={14} color="#676767">
+                Saldo Anda
+              </Text>
+              <Text fontWeight="$semibold" fontSize={20}>
+                Rp. 100.000
+              </Text>
             </VStack>
             <Box flex={1} alignItems="flex-end">
               <VStack alignItems="center">
@@ -217,7 +319,9 @@ export default function HomeScreen() {
                     height={46}
                   />
                 </Box>
-                <Text fontSize={12} fontWeight="$semibold" color={biruZala}>Top Up</Text>
+                <Text fontSize={12} fontWeight="$semibold" color={biruZala}>
+                  Top Up
+                </Text>
               </VStack>
             </Box>
             <VStack alignItems="center">
@@ -232,7 +336,9 @@ export default function HomeScreen() {
               >
                 <Plus color="white" strokeWidth={2.25} width={38} height={46} />
               </Box>
-              <Text fontSize={12} fontWeight="$semibold" color={biruZala}>Riwayat</Text>
+              <Text fontSize={12} fontWeight="$semibold" color={biruZala}>
+                Riwayat
+              </Text>
             </VStack>
           </HStack>
         </Box>
@@ -245,17 +351,19 @@ export default function HomeScreen() {
             borderBottomRightRadius={40}
             space="lg"
           >
-            <Text bold fontSize={20} color={donkerZala}>Fitur Layanan</Text>
+            <Text bold fontSize={20} color={donkerZala}>
+              Fitur Layanan
+            </Text>
             <HStack justifyContent="space-between">
               <Box w={70} h={82}>
                 <VStack alignItems="center">
                   <Center w={55} h={55} bgColor={biruZala} borderRadius={100}>
-                    <Image
-                      source={require("../../../assets/Icons/washing-machine.png")}
-                      alt="washing-machine"
-                    />
+                  <WashingMachine color="white" size={32}/>
+                  
                   </Center>
-                  <Text bold fontSize={14} color={donkerZala}>Laundry</Text>
+                  <Text bold fontSize={14} color={donkerZala}>
+                    Laundry
+                  </Text>
                 </VStack>
               </Box>
               <Box w={70} h={82}>
@@ -263,7 +371,9 @@ export default function HomeScreen() {
                   <Center w={55} h={55} bgColor={biruZala} borderRadius={100}>
                     <Store size={30} color="white" />
                   </Center>
-                  <Text bold fontSize={14} color="#003C60">Zala Store</Text>
+                  <Text bold fontSize={14} color="#003C60">
+                    Zala Store
+                  </Text>
                 </VStack>
               </Box>
               <Box w={70} h={82}>
@@ -271,7 +381,9 @@ export default function HomeScreen() {
                   <Center w={55} h={55} bgColor={biruZala} borderRadius={100}>
                     <BadgePercent size={32} color="white" />
                   </Center>
-                  <Text bold fontSize={14} color="#003C60">Promo</Text>
+                  <Text bold fontSize={14} color="#003C60">
+                    Promo
+                  </Text>
                 </VStack>
               </Box>
               <Box w={70} h={82}>
@@ -279,7 +391,9 @@ export default function HomeScreen() {
                   <Center w={55} h={55} bgColor={biruZala} borderRadius={100}>
                     <Users size={32} color="white" />
                   </Center>
-                  <Text textAlign="center" bold fontSize={14} color="#003C60">Layanan B to B</Text>
+                  <Text textAlign="center" bold fontSize={14} color="#003C60">
+                    Layanan B to B
+                  </Text>
                 </VStack>
               </Box>
             </HStack>
@@ -289,7 +403,9 @@ export default function HomeScreen() {
                   <Center w={55} h={55} bgColor={biruZala} borderRadius={100}>
                     <Link size={32} color="white" />
                   </Center>
-                  <Text bold fontSize={14} color="#003C60">Kontak</Text>
+                  <Text bold fontSize={14} color="#003C60">
+                    Kontak
+                  </Text>
                 </VStack>
               </Box>
               <Box w={70} h={82}>
@@ -348,28 +464,40 @@ export default function HomeScreen() {
                       h={120}
                     />
                     <VStack p={4}>
-                      <Text fontWeight="$semibold" fontSize={14}>{item.name}</Text>
-                      <Text fontSize={12} color="#515151">{item.address}</Text>
+                      <Text fontWeight="$semibold" fontSize={14}>
+                        {item.name}
+                      </Text>
+                      <Text fontSize={12} color="#515151">
+                        {item.address}
+                      </Text>
                       <HStack
                         space={"sm"}
                         alignItems="center"
                         justifyContent="space-between"
                       >
-                        <HStack alignItems="center">
+                        <HStack 
+                        alignItems="center"
+                        >
                           <Star size={16} color="#FFC107" />
                           <Text
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >{item.star}</Text>
+                          >
+                            {item.star}
+                          </Text>
                         </HStack>
-                        <HStack alignItems="center">
+                        <HStack 
+                        alignItems="center"
+                        >
                           <MessageSquare size={16} color="#515151" />
                           <Text
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >{item.message}</Text>
+                          >
+                            {item.message}
+                          </Text>
                         </HStack>
                         <HStack alignItems="center">
                           <MapPin size={16} color="#515151" />
@@ -377,7 +505,9 @@ export default function HomeScreen() {
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >{item.distance}</Text>
+                          >
+                            {item.distance}
+                          </Text>
                         </HStack>
                       </HStack>
                     </VStack>
@@ -422,8 +552,12 @@ export default function HomeScreen() {
                       h={120}
                     />
                     <VStack p={4}>
-                      <Text fontWeight="$semibold" fontSize={14}>{item.name}</Text>
-                      <Text fontSize={12} color="#515151">{item.address}</Text>
+                      <Text fontWeight="$semibold" fontSize={14}>
+                        {item.name}
+                      </Text>
+                      <Text fontSize={12} color="#515151">
+                        {item.address}
+                      </Text>
                       <HStack
                         space={"sm"}
                         alignItems="center"
@@ -435,7 +569,9 @@ export default function HomeScreen() {
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >{item.star}</Text>
+                          >
+                            {item.star}
+                          </Text>
                         </HStack>
                         <HStack alignItems="center">
                           <MessageSquare size={16} color="#515151" />
@@ -443,7 +579,9 @@ export default function HomeScreen() {
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >{item.message}</Text>
+                          >
+                            {item.message}
+                          </Text>
                         </HStack>
                         <HStack alignItems="center">
                           <MapPin size={16} color="#515151" />
@@ -451,7 +589,9 @@ export default function HomeScreen() {
                             fontSize={12}
                             fontWeight="$semibold"
                             color="#515151"
-                          >{item.distance}</Text>
+                          >
+                            {item.distance}
+                          </Text>
                         </HStack>
                       </HStack>
                     </VStack>
@@ -463,7 +603,9 @@ export default function HomeScreen() {
               />
             </Box>
             <HStack justifyContent="space-between" alignItems="center">
-              <Text bold fontSize={20} color={donkerZala}>Baru di Zala Mobile</Text>
+              <Text bold fontSize={20} color={donkerZala}>
+                Baru di Zala Mobile
+              </Text>
             </HStack>
             <Box flex={1}>
               <FlatList
@@ -499,9 +641,7 @@ export default function HomeScreen() {
               </Text>
             </HStack>
             <Box flex={1}>
-              <FlatList
-                data={laundry}
-                renderItem={({ item }) => (
+              
                   <Box
                     w={336}
                     h={146}
@@ -520,11 +660,7 @@ export default function HomeScreen() {
                       resizeMode="stretch"
                     />
                   </Box>
-                )}
-                horizontal={true}
-                showsHorizontalScrollIndicator={false}
-                keyExtractor={(item) => item.id}
-              />
+                
             </Box>
             <HStack justifyContent="space-between" alignItems="center">
               <Text bold fontSize={20} color={donkerZala}>
@@ -566,9 +702,15 @@ export default function HomeScreen() {
             </HStack>
             <Box flex={1}>
               <FlatList
-                data={artikel}
+                data={artikel.slice(0, 3)}
                 renderItem={({ item }) => (
-                  <HStack borderRadius={20} bgColor="white" mr={10} mb={14} space="md">
+                  <HStack
+                    borderRadius={20}
+                    bgColor="white"
+                    mr={10}
+                    mb={14}
+                    space="md"
+                  >
                     <Image
                       source={require("../../../assets/Images/Home/orang.png")}
                       alt="Laundry"
@@ -586,16 +728,24 @@ export default function HomeScreen() {
                         fontWeight="$semibold"
                         fontSize={16}
                         color={donkerZala}
-                        >{item.judul}</Text>
-                        <Text fontSize={12} color="#515151" fontWeight="$normal">{item.deskripsi}</Text>
-                        <Text fontSize={12} color={biruZala} italic>{item.tanggal}</Text>
+                      >
+                        {item.judul}
+                      </Text>
+                      <Text fontSize={12} color="#515151" fontWeight="$normal">
+                        {item.deskripsi}
+                      </Text>
+                      <Text fontSize={12} color={biruZala} italic>
+                        {item.tanggal}
+                      </Text>
                     </VStack>
                   </HStack>
                 )}
                 horizontal={false}
                 showsHorizontalScrollIndicator={false}
+                scrollEnabled={false}
                 keyExtractor={(item) => item.id}
               />
+              {artikel.length > 3 && <>{/* Show More */}</>}
             </Box>
           </VStack>
         </VStack>
@@ -603,3 +753,13 @@ export default function HomeScreen() {
     </ScrollView>
   );
 }
+const styles = StyleSheet.create({
+  notif: {
+    backgroundColor: "white",
+    width: 40,
+    height: 40,
+    padding: 8,
+    borderRadius: 50,
+    alignItems: "center",
+  },
+});
